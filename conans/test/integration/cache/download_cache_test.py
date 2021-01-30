@@ -223,7 +223,7 @@ class CachedDownloaderUnitTest(unittest.TestCase):
                     return url
 
         self.file_downloader = FakeFileDownloader()
-        self.cached_downloader = CachedFileDownloader(cache_folder, self.file_downloader)
+        self.cached_downloader = CachedFileDownloader(cache_folder, self.file_downloader, None)
 
     def test_concurrent_locks(self):
         folder = temp_folder()

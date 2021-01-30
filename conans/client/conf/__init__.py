@@ -736,7 +736,7 @@ class ConanClientConfigParser(ConfigParser, object):
 
 
     @property
-    def remote_cache(self):
+    def remote_cache_active(self):
         try:
             remote_cache = self.get_item("remote_cache.active")
             return remote_cache
