@@ -733,3 +733,44 @@ class ConanClientConfigParser(ConfigParser, object):
             return self.get_item("general.required_conan_version")
         except ConanException:
             return None
+
+
+    @property
+    def remote_cache(self):
+        try:
+            remote_cache = self.get_item("remote_cache.active")
+            return remote_cache
+        except ConanException:
+            return False
+    
+    @property
+    def remote_cache_type(self):
+        try:
+            remote_cache = self.get_item("remote_cache.type")
+            return remote_cache
+        except ConanException:
+            # Add in this message the cache types supported
+            raise ConanException("Incorrect definition of remote_cache.type, you must specify a cache type (artifactory / ssh (coming soon))")
+    @property
+    def remote_cache_endpoint(self):
+        try:
+            remote_cache = self.get_item("remote_cache.endpoint")
+            return remote_cache
+        except ConanException:
+            raise ConanException("Incorrect definition of remote_cache.endpoint, you must specify a valid endpoint")
+    
+    @property
+    def remote_cache_usr(self):
+        try:
+            remote_cache = self.get_item("remote_cache.user")
+            return remote_cache
+        except ConanException:
+            return ""
+    
+    @property
+    def remote_cache_password(self):
+        try:
+            remote_cache = self.get_item("remote_cache.password")
+            return remote_cache
+        except ConanException:
+            return ""
