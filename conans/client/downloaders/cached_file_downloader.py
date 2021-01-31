@@ -45,8 +45,20 @@ class CachedFileDownloader(object):
         with self._lock(h):
             cached_path = os.path.join(self._cache_folder, h)
             if not os.path.exists(cached_path):
-                self._file_downloader.download(url=url, file_path=cached_path, md5=md5,
+                # Here is where the file is searched in the remote Cache
+                if self._remote_cache:
+                    file_path = self._remote_cache.getFromRemoteCache(url)
+                    # It's probably that here we need to copy from the file_path to the cached_path
+                    # to keep the rest of the code functional.
+
+                # If the file was not found in the Remote Cache or there is not remote cache enabled
+                if file_path is None:
+                    self._file_downloader.download(url=url, file_path=cached_path, md5=md5,
                                                sha1=sha1, sha256=sha256, **kwargs)
+                    # In the Remote Cache is enabled, after download the file, is saved to this remote cache.
+                    # It will be later saved to the local cache
+                    if self._remote_cache:
+                        self._remote_cache.saveToCache(url, file_path)
             else:
                 # specific check for corrupted cached files, will raise, but do nothing more
                 # user can report it or "rm -rf cache_folder/path/to/file"
@@ -55,6 +67,7 @@ class CachedFileDownloader(object):
                 except ConanException as e:
                     raise ConanException("%s\nCached downloaded file corrupted: %s"
                                          % (str(e), cached_path))
+
 
             if file_path is not None:
                 file_path = os.path.abspath(file_path)

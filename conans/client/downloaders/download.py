@@ -8,7 +8,7 @@ def run_downloader(requester, output, verify, config, user_download=False, use_c
     if use_cache and config.download_cache:
         remote_cache = None
         if config.remote_cache_active:
-            remote_cache = RemoteCache(config)
+            remote_cache = RemoteCache(config, output)
         downloader = CachedFileDownloader(config.download_cache, downloader,
                                           user_download=user_download, remote_cache=remote_cache)
     return downloader.download(**kwargs)
